@@ -1,0 +1,31 @@
+<div class="p-3 bg-dark text-white">
+   <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="{% url 'questions:home' %}" class="nav-link px-2 text-secondary">Home</a></li>
+
+        <li><a href="{% url 'questions:ask' %}" class="nav-link px-2 text-white">Ask a question</a></li>
+      </ul>
+
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="GET" action="{% url 'questions:search_results' %}">
+        <input type="search" name="x" id="search-field" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+      </form>
+      {% if request.user.is_authenticated %}
+      <!-- Todo: Edit this so that you can both edit account which is your username and email and edit profile which is your personal details -->
+      <div class="text-end">
+        <button type="button" class="btn btn-outline-light me-2"><a class="text-decoration-none text-light" href="{% url 'authentication:logout' %}">Logout</a></button>
+        <button type="button" class="btn btn-warning"><a class="text-decoration-none text-dark" href="{% url 'users:view_profile' request.user.slug request.user.pk %}">Profile</a></button>
+      </div>
+      {% else %}
+      <div class="text-end">
+        <button type="button" class="btn btn-outline-light me-2"><a class="text-decoration-none text-light" href="{% url 'authentication:signin' %}">Sign-in</a></button>
+        <button type="button" class="btn btn-warning"><a class="text-decoration-none text-dark" href="{% url 'authentication:signup' %}">Sign-up</a></button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

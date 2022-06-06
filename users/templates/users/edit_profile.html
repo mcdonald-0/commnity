@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{# load i18n admin_modify admin_media_prefix #}
+
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'css/users/edit_profile.css' %}">
+{% endblock %}
+
+<!--! I need to add django calender to my calender, the commented code is the attempt to add django admin calender. I should try adding it -->
+
+{% block navbar %}
+    {% include 'navbar.html' %}
+{% endblock %}
+
+{% block navbarstylesheet %}
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="image-box">
+    <img src="{{ request.user.userprofile.profile_image.url }}" id="image" width="300px">
+</div>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'footer.html' %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/users/edit_profile.js' %}"></script>
+{% endblock %}
+
+
+
