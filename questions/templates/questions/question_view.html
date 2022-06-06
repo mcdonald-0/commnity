@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block navbar %}
+    {% include 'navbar.html' %}
+{% endblock %}
+
+{% block navbarstylesheet %}
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+    background-color: #f7f6f6
+}
+
+.card {
+    border: none;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+    border-radius: 4px
+}
+
+.dots {
+    height: 4px;
+    width: 4px;
+    margin-bottom: 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block
+}
+
+.badge {
+    padding: 7px;
+    padding-right: 9px;
+    padding-left: 16px;
+    box-shadow: 5px 6px 6px 2px #e9ecef
+}
+
+.user-img {
+    margin-top: 4px
+}
+
+.check-icon {
+    font-size: 17px;
+    color: #c3bfbf;
+    top: 1px;
+    position: relative;
+    margin-left: 3px
+}
+
+.form-check-input {
+    margin-top: 6px;
+    margin-left: -24px !important;
+    cursor: pointer
+}
+
+.form-check-input:focus {
+    box-shadow: none
+}
+
+.icons i {
+    margin-left: 8px
+}
+
+.reply {
+    margin-left: 12px
+}
+
+.reply small {
+    color: #b7b4b4
+}
+
+.reply small:hover {
+    color: green;
+    cursor: pointer
+}
+    </style>
+
+
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible m-4">
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              <strong>Warning🚫</strong> {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="card card-body m-4">
+        <div class="text-center">
+            <span class="h3">{{ question.title }}</span>
+        </div>
+    </div>
+
+    <div class="card card-body mx-4 mb-4">
+        <div class="text-center">
+            <div>{{ question.question }}</div>
+        </div>
+    </div>
+
+    {% if request.user.is_authenticated %}
+        <div class="card card-body mx-4">
+            <form method="POST">
+                {% csrf_token %}
+                {{form.answer}}
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            </form>
+        </div>
+    {% endif %}
+        
+    {% if question.answers.all %}
+        <div class="container mt-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8">
+                    <div class="headings d-flex justify-content-between align-items-center mb-3">
+                        <h5>Answers ({{answers_count}})</h5>
+                    </div>
+
+                    {% for answer in question.answers.all %}
+                    <div class="card p-3 mt-2">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="user d-flex flex-row align-items-center"> 
+                                <img src="{{ answer.answerer.profile_image.url }}" width="30" class="user-img rounded-circle mr-2"> 
+                                <span>
+                                    <small class="font-weight-bold text-primary"><a href="{% url 'users:view_profile' answer.answerer.user.slug answer.answerer.pk %}" class="text-primary">{{ answer.answerer }}</a></small>
+                                    <span>
+                                        <small class="font-weight-bold">{{ answer.answer | safe }}</small>
+                                    </span> 
+                                </span> 
+                            </div> 
+                             
+                            <small>{{ answer.updated_at | naturaltime | naturalday }}</small>
+                           <!-- ! Research about performing logic in templates so if the user comments past more than a day, it shows the good date -->
+                            
+                        </div>
+                        <!--! Fix the comment view section because it is looking weird if a person writes a long comment. -->
+                        <div class="action d-flex justify-content-between mt-2 align-items-center">
+                            <div class="reply px-4"> 
+                                <small>Remove</small> 
+                                <span class="dots"></span> 
+                                <small>Reply</small> 
+                                <span class="dots"></span> 
+                                <small>Translate</small> 
+                            </div>
+
+                            <div class="icons align-items-center"> 
+                                <i class="fa fa-star text-warning"></i> 
+                                <i class="fa fa-check-circle-o check-icon"></i> 
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %} 
+                    <div class="mb-5"></div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% include 'footer.html' %}
+{% endblock %}

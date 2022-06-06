@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block navbar %}
+    {% include 'navbar.html' %}
+{% endblock %}
+
+{% block navbarstylesheet %}
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="card mx-4">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="my-2">{{form.title}}</div> 
+                <div class="my-2">{{form.question}}</div> 
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+    <input type="hidden" name="next" value="{{ request.GET.next }}"/>
+{% endblock %}
+
+{% block footer %}
+    {% include 'footer.html' %}
+{% endblock %}
