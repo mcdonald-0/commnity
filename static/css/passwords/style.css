@@ -1,0 +1,10 @@
+body{
+    background:#eee;
+    color: #708090;
+    padding: 5em;
+}
+a, a:hover{
+    text-decoration:none; 
+    color: #00ADBB!important;   
+    font-weight: bold;
+}
