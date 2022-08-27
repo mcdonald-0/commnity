@@ -112,7 +112,7 @@ def AskQuestion(request, *args, **kwargs):
 
     if request.user.userprofile.first_name == None:
         messages.warning(request, 'You need to create a profile before you can ask a question😣!')
-        return redirect(f'/user/{request.user.slug}/{request.user.pk}/edit/?next={request.path}')
+        return redirect(f'/user/{request.user.slug}/{request.user.pk}/?next={request.path}')
 
     form = AskQuestionForm()
 
