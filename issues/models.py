@@ -1,7 +1,6 @@
 from django.db import models
 
-from helpers.models import *
-from authentication.models import *
+from helpers.models import TrackingModel
 
 
 class ReportedIssue(TrackingModel):

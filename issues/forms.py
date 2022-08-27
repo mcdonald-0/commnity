@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from issues.models import *
+from issues.models import ReportedIssue
 
 class ReportAnIssueForm(ModelForm):
 	title = forms.CharField(

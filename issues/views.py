@@ -3,10 +3,10 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from issues.models import *
-from issues.forms import *
+from issues.models import ReportedIssue
+from issues.forms import ReportAnIssueForm
 
-from helpers.views import *
+from helpers.views import get_client_ip
 
 def report_an_issue(request, *args, **kwargs):
 

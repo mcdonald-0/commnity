@@ -3,8 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.template.defaultfilters import slugify
 
-from users.models import *
-from helpers.models import *
+from users.models import UserProfile
+from helpers.models import TrackingModel
 
 
 def bot():

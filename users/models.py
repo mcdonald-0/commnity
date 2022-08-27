@@ -1,7 +1,7 @@
 from django.db import models
 
-from authentication.models import *
-from helpers.models import *
+from authentication.models import User
+from helpers.models import TrackingModel
 
 
 def get_image_filepath(self, *args, **kwargs):

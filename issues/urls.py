@@ -1,6 +1,6 @@
 from django.urls import path
 
-from issues.views import *
+from issues.views import report_an_issue
 
 app_name = 'issues'
 urlpatterns = [
