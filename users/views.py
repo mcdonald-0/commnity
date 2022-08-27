@@ -1,5 +1,5 @@
 import os 
-import cv2
+# import cv2
 import json
 import base64
 import requests
@@ -23,128 +23,128 @@ from users.models import *
 TEMP_PROFILE_IMAGE_NAME = "temp_profile_image.png"
 
 @redirect_unauthenticated_user_to_signin(login_url='authentication:signin')
-def EditUserProfile(request, *args, **kwargs):
-    #Todo: Modify the frontend of this view
-    user_id = kwargs['user_id']
-    user_slug = kwargs['slug']
+# def EditUserProfile(request, *args, **kwargs):
+#     #Todo: Modify the frontend of this view
+#     user_id = kwargs['user_id']
+#     user_slug = kwargs['slug']
 
-    try:
-        profile = request.user.userprofile
-    except UserProfile.DoesNotExist:
-        profile = UserProfile.objects.create(user=request.user, pk=request.user.pk)
-        profile.save()
+#     try:
+#         profile = request.user.userprofile
+#     except UserProfile.DoesNotExist:
+#         profile = UserProfile.objects.create(user=request.user, pk=request.user.pk)
+#         profile.save()
 
-    try:
-        user = User.objects.get(pk=user_id, slug=user_slug)
-    except User.DoesNotExist:
-        return HttpResponse('Something went wrong😥')
+#     try:
+#         user = User.objects.get(pk=user_id, slug=user_slug)
+#     except User.DoesNotExist:
+#         return HttpResponse('Something went wrong😥')
 
-    if user.pk != request.user.pk:
-        messages.info(request, 'What are you doing😕')
-        messages.info(request, 'Try editing your own profile😏')
-        return redirect('users:edit_profile', user_id=request.user.pk, slug=request.user.slug)
+#     if user.pk != request.user.pk:
+#         messages.info(request, 'What are you doing😕')
+#         messages.info(request, 'Try editing your own profile😏')
+#         return redirect('users:edit_profile', user_id=request.user.pk, slug=request.user.slug)
 
 
-    form = UserProfileForm(instance=request.user.userprofile)
+#     form = UserProfileForm(instance=request.user.userprofile)
 
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=request.user.userprofile)
-        if form.is_valid():
+#     if request.method == 'POST':
+#         form = UserProfileForm(request.POST, request.FILES, instance=request.user.userprofile)
+#         if form.is_valid():
 
-            form.save()
+#             form.save()
 
-            destination = request.POST.get('next')
+#             destination = request.POST.get('next')
  
-            if destination:
-                return redirect (destination)
+#             if destination:
+#                 return redirect (destination)
 
-            return redirect('users:view_profile', slug=request.user.slug, user_id=request.user.pk)
+#             return redirect('users:view_profile', slug=request.user.slug, user_id=request.user.pk)
 
-    context = {
-        'user_slug': user.slug, 
-        'form': form,
-        'DATA_UPLOAD_MAX_MEMORY_SIZE': settings.DATA_UPLOAD_MAX_MEMORY_SIZE 
-    }
-    return render(request, 'users/edit_profile.html', context)
-
-
-def save_temp_profile_image_from_base64String(imageString, user):
-	INCORRECT_PADDING_EXCEPTION = "Incorrect padding"
-	try:
-		if not os.path.exists(settings.TEMP):
-			os.mkdir(settings.TEMP)
-		if not os.path.exists(f'{ settings.TEMP }/{ user.slug }/{ user.pk }'):
-			os.mkdir(f'{ settings.TEMP} /{ user.slug }/{ user.pk }')
-		url = os.path.join(f'{ settings.TEMP }/{ user.slug }/{ user.pk }', TEMP_PROFILE_IMAGE_NAME)
-		storage = FileSystemStorage(location=url)
-		image = base64.b64decode(imageString)
-		with storage.open('', 'wb+') as destination:
-			destination.write(image)
-			destination.close()
-		return url
-	except Exception as e:
-		print("exception: " + str(e))
-		# workaround for an issue I found
-		if str(e) == INCORRECT_PADDING_EXCEPTION:
-			imageString += "=" * ((4 - len(imageString) % 4) % 4)
-			return save_temp_profile_image_from_base64String(imageString, user)
-	return None
+#     context = {
+#         'user_slug': user.slug, 
+#         'form': form,
+#         'DATA_UPLOAD_MAX_MEMORY_SIZE': settings.DATA_UPLOAD_MAX_MEMORY_SIZE 
+#     }
+#     return render(request, 'users/edit_profile.html', context)
 
 
-def CropUserProfileImage(request, *args, **kwargs):
-	user_id = kwargs['user_id']
-	user_slug = kwargs['slug']
+# def save_temp_profile_image_from_base64String(imageString, user):
+# 	INCORRECT_PADDING_EXCEPTION = "Incorrect padding"
+# 	try:
+# 		if not os.path.exists(settings.TEMP):
+# 			os.mkdir(settings.TEMP)
+# 		if not os.path.exists(f'{ settings.TEMP }/{ user.slug }/{ user.pk }'):
+# 			os.mkdir(f'{ settings.TEMP} /{ user.slug }/{ user.pk }')
+# 		url = os.path.join(f'{ settings.TEMP }/{ user.slug }/{ user.pk }', TEMP_PROFILE_IMAGE_NAME)
+# 		storage = FileSystemStorage(location=url)
+# 		image = base64.b64decode(imageString)
+# 		with storage.open('', 'wb+') as destination:
+# 			destination.write(image)
+# 			destination.close()
+# 		return url
+# 	except Exception as e:
+# 		print("exception: " + str(e))
+# 		# workaround for an issue I found
+# 		if str(e) == INCORRECT_PADDING_EXCEPTION:
+# 			imageString += "=" * ((4 - len(imageString) % 4) % 4)
+# 			return save_temp_profile_image_from_base64String(imageString, user)
+# 	return None
 
-	payload = {}
 
-	try:
-		user = User.objects.get(pk=user_id, slug=user_slug)
-	except User.DoesNotExist:
-		return HttpResponse('Something went wrong😥')
+# def CropUserProfileImage(request, *args, **kwargs):
+# 	user_id = kwargs['user_id']
+# 	user_slug = kwargs['slug']
 
-	if user.pk != request.user.pk:
-		messages.info(request, 'What are you doing😕')
-		messages.info(request, 'Try editing your own profile😏')
-		return redirect('users:edit_profile', user_id=request.user.pk, slug=request.user.slug)
+# 	payload = {}
 
-	user = request.user.userprofile
+# 	try:
+# 		user = User.objects.get(pk=user_id, slug=user_slug)
+# 	except User.DoesNotExist:
+# 		return HttpResponse('Something went wrong😥')
 
-	if request.POST and user.is_authenticated:
+# 	if user.pk != request.user.pk:
+# 		messages.info(request, 'What are you doing😕')
+# 		messages.info(request, 'Try editing your own profile😏')
+# 		return redirect('users:edit_profile', user_id=request.user.pk, slug=request.user.slug)
 
-		try:
-			imageString = request.POST.get('profile_image')
-			url = save_temp_profile_image_from_base64String(imageString, user)
-			image = cv2.imread(url)
+# 	user = request.user.userprofile
 
-			cropX = int(float(str(request.POST.get("cropX"))))
-			cropY = int(float(str(request.POST.get("cropY"))))
-			cropWidth = int(float(str(request.POST.get("cropWidth"))))
-			cropHeight = int(float(str(request.POST.get("cropHeight"))))
+# 	if request.POST and user.is_authenticated:
 
-			if cropX < 0:
-				cropX = 0
-			if cropY < 0:
-				cropY = 0
+# 		try:
+# 			imageString = request.POST.get('profile_image')
+# 			url = save_temp_profile_image_from_base64String(imageString, user)
+# 			image = cv2.imread(url)
 
-			crop_image = image[cropY:cropY + cropHeight, cropX:cropX + cropWidth]
+# 			cropX = int(float(str(request.POST.get("cropX"))))
+# 			cropY = int(float(str(request.POST.get("cropY"))))
+# 			cropWidth = int(float(str(request.POST.get("cropWidth"))))
+# 			cropHeight = int(float(str(request.POST.get("cropHeight"))))
 
-			cv2.imwrite(url, crop_image)
+# 			if cropX < 0:
+# 				cropX = 0
+# 			if cropY < 0:
+# 				cropY = 0
 
-			user.profile_image.delete()
+# 			crop_image = image[cropY:cropY + cropHeight, cropX:cropX + cropWidth]
 
-			user.profile_image.save("profile_image.png", files.File(open(url, "rb")))
-			user.save()
+# 			cv2.imwrite(url, crop_image)
 
-			payload['result'] = "success"
-			payload['cropped_profile_image'] = user.profile_image.url
+# 			user.profile_image.delete()
 
-			os.remove(url)
+# 			user.profile_image.save("profile_image.png", files.File(open(url, "rb")))
+# 			user.save()
 
-		except Exception as e:
-			payload['result'] = "error"
-			payload['exception'] = str(e)
+# 			payload['result'] = "success"
+# 			payload['cropped_profile_image'] = user.profile_image.url
 
-	return HttpResponse(json.dumps(payload), content_type="application/json")
+# 			os.remove(url)
+
+# 		except Exception as e:
+# 			payload['result'] = "error"
+# 			payload['exception'] = str(e)
+
+# 	return HttpResponse(json.dumps(payload), content_type="application/json")
 
 
 

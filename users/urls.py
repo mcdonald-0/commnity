@@ -1,6 +1,6 @@
 from django.urls import path
 
-from users.views import UserProfileView, EditUserProfile, CropUserProfileImage
+from users.views import UserProfileView
 
 app_name = 'users'
 urlpatterns = [ 
